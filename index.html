@@ -252,8 +252,14 @@
       }
       .sum-num {
         display: inline-flex; align-items: center; justify-content: center;
-        min-width: 26px; height: 26px; border-radius: 50%;
+        min-width: 26px; min-height: 26px; border-radius: 999px; padding: 2px 9px;
         background: var(--accent); color: var(--accent-ink); font-size: 15px;
+      }
+      .sum-count { font-family: "Noto Sans KR", sans-serif; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+      .sum-empty {
+        background: var(--card-front); border: 3px dashed var(--line);
+        border-radius: 16px; padding: 14px 16px; text-align: center;
+        font-size: 16px; line-height: 1.5; color: var(--ink-soft); margin: 0;
       }
       .sum-list {
         list-style: none; margin: 0; padding: 0;
@@ -385,7 +391,7 @@
 
       <!-- ============ 요약 모드 ============ -->
       <section id="panel-summary" class="hidden">
-        <p style="font-size:16px; font-weight:700; margin:2px 2px 12px;">공부한 순서대로 5단계로 묶었어요. 시험 전에 한 번씩 훑어보세요.</p>
+        <p style="font-size:16px; font-weight:700; margin:2px 2px 12px;">EPA 608 시험 단계별로 묶었어요. 지금까지 배운 단어는 전부 코어예요.</p>
         <div id="summary-body"></div>
       </section>
     </div>
@@ -446,11 +452,10 @@
 
       /* ============ 요약 모드 ============ */
       var STAGES = [
-        { title: "원소", words: ["Chlorine", "Fluorine", "Hydrogen", "Carbon"] },
-        { title: "냉매 계열", words: ["CFC", "HCFC", "HFC", "HFO"] },
-        { title: "오존과 환경", words: ["ozone", "stratosphere", "deplete", "ODP", "GWP", "ultraviolet (UV)", "Montreal Protocol"] },
-        { title: "핵심 동사", words: ["dissolve", "release", "vent / venting", "phase out", "prohibit", "knowingly"] },
-        { title: "3R 원칙", words: ["recover", "recycle", "reclaim", "refrigerant"] }
+        { title: "코어 · Core", badge: "C", words: ["Chlorine", "Fluorine", "Hydrogen", "Carbon", "CFC", "HCFC", "HFC", "HFO", "ozone", "stratosphere", "deplete", "ODP", "GWP", "ultraviolet (UV)", "dissolve", "release", "vent / venting", "phase out", "prohibit", "knowingly", "Montreal Protocol", "recover", "recycle", "reclaim", "refrigerant"] },
+        { title: "타입 I · Type I", badge: "I", words: [] },
+        { title: "타입 II · Type II", badge: "II", words: [] },
+        { title: "타입 III · Type III", badge: "III", words: [] }
       ];
       function wordByEn(en) {
         for (var i = 0; i < WORDS.length; i++) {
@@ -468,10 +473,24 @@
           head.className = "sum-head";
           var num = document.createElement("span");
           num.className = "sum-num";
-          num.textContent = (si + 1);
+          num.textContent = stage.badge;
           head.appendChild(num);
-          head.appendChild(document.createTextNode((si + 1) + "단계 · " + stage.title));
+          head.appendChild(document.createTextNode(stage.title));
+          if (stage.words.length > 0) {
+            var cnt = document.createElement("span");
+            cnt.className = "sum-count";
+            cnt.textContent = "단어 " + stage.words.length + "개";
+            head.appendChild(cnt);
+          }
           wrap.appendChild(head);
+          if (stage.words.length === 0) {
+            var emptyNote = document.createElement("p");
+            emptyNote.className = "sum-empty";
+            emptyNote.textContent = "아직 배우기 전이에요. 배우면 여기에 추가돼요.";
+            wrap.appendChild(emptyNote);
+            body.appendChild(wrap);
+            return;
+          }
           var ul = document.createElement("ul");
           ul.className = "sum-list";
           stage.words.forEach(function (en) {
