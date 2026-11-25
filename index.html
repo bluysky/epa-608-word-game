@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>EPA 608 단어 게임</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #fff7e6;
+        --bg-soft: #ffefd0;
+        --ink: #2e2a24;
+        --ink-soft: #5c554a;
+        --line: #e8dcc4;
+        --card-front: #ffffff;
+        --accent: #e07b39;
+        --accent-ink: #ffffff;
+        --good: #2e9e5b;
+        --good-bg: #dff5e6;
+        --bad: #d64545;
+        --bad-bg: #fde3e3;
+        --chip: #fff1cf;
+        --shadow: 0 10px 24px rgba(120, 90, 40, 0.14);
+        --pastel-1: #ffe3ec;
+        --pastel-2: #d9f2e2;
+        --pastel-3: #d9ecff;
+        --pastel-4: #ffefd1;
+        --pastel-5: #e6e0ff;
+        --pastel-6: #d8f4f0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #241f18;
+          --bg-soft: #2e2820;
+          --ink: #f5eddc;
+          --ink-soft: #cfc4ab;
+          --line: #4a4234;
+          --card-front: #332c21;
+          --accent: #f09a54;
+          --accent-ink: #241a10;
+          --good: #6fd598;
+          --good-bg: #1f4030;
+          --bad: #ff8f8f;
+          --bad-bg: #4a2323;
+          --chip: #3d3423;
+          --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+          --pastel-1: #4d2f3c;
+          --pastel-2: #2c4636;
+          --pastel-3: #2c3f55;
+          --pastel-4: #4d3d22;
+          --pastel-5: #3b3560;
+          --pastel-6: #274843;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans KR", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+      .wrap { max-width: 680px; margin: 0 auto; padding: 20px 16px 48px; }
+
+      header { text-align: center; padding: 8px 0 4px; }
+      h1 {
+        font-family: "Jua", "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        font-size: clamp(30px, 7vw, 42px);
+        margin: 0 0 6px;
+        letter-spacing: 0.5px;
+      }
+      .sub { font-size: 19px; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+
+      /* Mode switch */
+      .modes { display: flex; gap: 10px; margin: 22px 0 18px; }
+      .mode-btn {
+        flex: 1;
+        font-family: "Jua", "Noto Sans KR", sans-serif;
+        font-size: 22px;
+        padding: 16px 8px;
+        border-radius: 999px;
+        border: 3px solid var(--line);
+        background: var(--card-front);
+        color: var(--ink-soft);
+        cursor: pointer;
+        min-height: 60px;
+      }
+      .mode-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-ink);
+        box-shadow: var(--shadow);
+      }
+
+      .progress-row {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; margin: 4px 2px 10px;
+        font-size: 19px; font-weight: 700;
+      }
+      .progress-track {
+        height: 14px; border-radius: 999px; background: var(--bg-soft);
+        border: 2px solid var(--line); overflow: hidden; margin-bottom: 16px;
+      }
+      .progress-fill {
+        height: 100%; background: var(--accent); border-radius: 999px;
+        transition: width 0.35s ease; width: 0%;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .progress-fill, .flip-inner { transition: none !important; }
+      }
+
+      /* ---------- Flip card ---------- */
+      .flip-scene { perspective: 1200px; margin: 6px 0 18px; }
+      .flip-inner {
+        position: relative; width: 100%; min-height: 380px;
+        transform-style: preserve-3d; transition: transform 0.55s ease;
+        cursor: pointer;
+      }
+      .flip-inner.flipped { transform: rotateY(180deg); }
+      .face {
+        position: absolute; inset: 0;
+        backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        border-radius: 28px; padding: 28px 24px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; box-shadow: var(--shadow);
+        border: 3px solid rgba(0,0,0,0.05);
+        overflow-y: auto;
+      }
+      .face.front { background: var(--card-front); }
+      .face.back { transform: rotateY(180deg); justify-content: flex-start; text-align: left; align-items: stretch; }
+      .p1 { background: var(--pastel-1); } .p2 { background: var(--pastel-2); }
+      .p3 { background: var(--pastel-3); } .p4 { background: var(--pastel-4); }
+      .p5 { background: var(--pastel-5); } .p6 { background: var(--pastel-6); }
+
+      .word-en {
+        font-family: "Jua", "Noto Sans KR", sans-serif;
+        font-size: clamp(40px, 10vw, 58px);
+        line-height: 1.15; margin: 0 0 10px; word-break: keep-all;
+      }
+      .word-pron { font-size: 26px; font-weight: 700; color: var(--ink-soft); margin: 0 0 18px; }
+      .tap-hint {
+        font-size: 19px; color: var(--ink-soft);
+        background: var(--chip); border-radius: 999px; padding: 8px 18px;
+      }
+      .unknown-badge {
+        position: absolute; top: 16px; right: 16px;
+        font-size: 17px; font-weight: 900; color: var(--bad);
+        background: var(--bad-bg); border-radius: 999px; padding: 6px 14px;
+        display: none;
+      }
+      .unknown-badge.on { display: block; }
+
+      .back-word { font-family: "Jua", "Noto Sans KR", sans-serif; font-size: 30px; margin: 0 0 2px; text-align: center; }
+      .back-pron { font-size: 20px; font-weight: 700; color: var(--ink-soft); margin: 0 0 16px; text-align: center; }
+      .info-box {
+        background: rgba(255,255,255,0.55); border-radius: 18px;
+        padding: 14px 18px; margin-bottom: 12px;
+      }
+      @media (prefers-color-scheme: dark) { .info-box { background: rgba(0,0,0,0.25); } }
+      .info-label { font-size: 17px; font-weight: 900; color: var(--accent); margin: 0 0 4px; }
+      .info-text { font-size: 22px; line-height: 1.55; margin: 0; font-weight: 500; }
+      .info-text.big { font-size: 27px; font-weight: 900; }
+
+      /* Buttons */
+      .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+      .btn {
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 21px; font-weight: 700;
+        padding: 14px 20px; min-height: 58px;
+        border-radius: 18px; border: 3px solid var(--line);
+        background: var(--card-front); color: var(--ink);
+        cursor: pointer; flex: 1; white-space: nowrap;
+      }
+      .btn:active { transform: scale(0.98); }
+      .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+      .btn.warn { border-color: var(--bad); color: var(--bad); }
+      .btn.warn.on { background: var(--bad); color: #fff; }
+      .btn.small { flex: 0 1 auto; font-size: 19px; padding: 12px 16px; min-height: 52px; }
+      .btn:disabled { opacity: 0.45; cursor: default; }
+
+      .empty-note {
+        text-align: center; font-size: 21px; line-height: 1.6;
+        background: var(--card-front); border: 3px dashed var(--line);
+        border-radius: 24px; padding: 36px 24px; margin: 6px 0 18px;
+      }
+
+      /* ---------- Quiz ---------- */
+      .quiz-word-box {
+        background: var(--card-front); border-radius: 28px; box-shadow: var(--shadow);
+        padding: 30px 24px 26px; text-align: center; margin-bottom: 18px;
+        border: 3px solid rgba(0,0,0,0.05);
+      }
+      .choices { display: flex; flex-direction: column; gap: 12px; }
+      .choice {
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 22px; font-weight: 700; text-align: left;
+        padding: 18px 20px; min-height: 64px;
+        border-radius: 18px; border: 3px solid var(--line);
+        background: var(--card-front); color: var(--ink); cursor: pointer;
+        line-height: 1.4;
+      }
+      .choice .num {
+        display: inline-block; min-width: 34px; height: 34px; line-height: 34px;
+        text-align: center; border-radius: 50%; background: var(--chip);
+        margin-right: 10px; font-size: 19px; vertical-align: middle;
+      }
+      .choice.correct { background: var(--good-bg); border-color: var(--good); }
+      .choice.wrong { background: var(--bad-bg); border-color: var(--bad); }
+      .choice:disabled { cursor: default; opacity: 1; }
+      .choice.dim:disabled { opacity: 0.55; }
+
+      .feedback {
+        display: none; border-radius: 24px; padding: 20px 22px; margin-top: 18px;
+      }
+      .feedback.show { display: block; }
+      .feedback.ok { background: var(--good-bg); }
+      .feedback.no { background: var(--bad-bg); }
+      .feedback h3 { font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400; font-size: 27px; margin: 0 0 10px; }
+      .feedback p { font-size: 21px; line-height: 1.6; margin: 0 0 8px; }
+      .feedback p:last-child { margin-bottom: 0; }
+      .feedback .lbl { font-weight: 900; }
+
+      .result-box {
+        background: var(--card-front); border-radius: 28px; box-shadow: var(--shadow);
+        padding: 28px 24px; text-align: center; margin-bottom: 18px;
+      }
+      .result-score { font-family: "Jua", "Noto Sans KR", sans-serif; font-size: 52px; margin: 6px 0; }
+      .result-msg { font-size: 22px; line-height: 1.55; margin: 0; }
+      .wrong-list { text-align: left; margin: 0 0 18px; padding: 0; list-style: none; }
+      .wrong-list li {
+        background: var(--card-front); border: 3px solid var(--line);
+        border-radius: 18px; padding: 14px 18px; margin-bottom: 10px;
+        font-size: 20px; line-height: 1.5;
+      }
+      .wrong-list .w-en { font-weight: 900; font-size: 22px; }
+      .section-title { font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400; font-size: 26px; margin: 22px 0 12px; }
+      .hidden { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>EPA 608 단어 게임</h1>
+        <p class="sub">지금까지 공부한 단어 25개 · 어원으로 외우면 오래 기억돼요</p>
+      </header>
+
+      <div class="modes" role="tablist" aria-label="게임 모드">
+        <button class="mode-btn active" id="tab-cards" type="button">🃏 카드 뒤집기</button>
+        <button class="mode-btn" id="tab-quiz" type="button">✏️ 4지선다 퀴즈</button>
+      </div>
+
+      <!-- ============ 카드 모드 ============ -->
+      <section id="panel-cards">
+        <div class="progress-row">
+          <span id="card-counter">1 / 25</span>
+          <span id="card-unknown-count">아직 몰라: 0개</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="card-progress"></div></div>
+
+        <div id="card-area">
+          <div class="flip-scene">
+            <div class="flip-inner" id="flip" role="button" tabindex="0" aria-label="카드 뒤집기">
+              <div class="face front">
+                <span class="unknown-badge" id="unknown-badge">아직 몰라</span>
+                <p class="word-en" id="front-word">Chlorine</p>
+                <p class="word-pron" id="front-pron">클로린</p>
+                <span class="tap-hint">카드를 누르면 뜻이 나와요 👆</span>
+              </div>
+              <div class="face back p1" id="card-back">
+                <span class="unknown-badge" id="unknown-badge-back">아직 몰라</span>
+                <p class="back-word" id="back-word">Chlorine</p>
+                <p class="back-pron" id="back-pron">클로린</p>
+                <div class="info-box">
+                  <p class="info-label">뜻</p>
+                  <p class="info-text big" id="back-meaning"></p>
+                </div>
+                <div class="info-box">
+                  <p class="info-label">🌱 어원 — 단어의 뿌리</p>
+                  <p class="info-text" id="back-etym"></p>
+                </div>
+                <div class="info-box">
+                  <p class="info-label">🎯 시험 포인트</p>
+                  <p class="info-text" id="back-tip"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row" style="margin-bottom:10px;">
+            <button class="btn" id="btn-prev" type="button">← 이전</button>
+            <button class="btn warn" id="btn-unknown" type="button">아직 몰라</button>
+            <button class="btn primary" id="btn-next" type="button">다음 →</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn small" id="btn-shuffle" type="button">🔀 섞기</button>
+            <button class="btn small" id="btn-filter" type="button">몰라 표시한 것만 보기</button>
+          </div>
+        </div>
+
+        <div class="empty-note hidden" id="card-empty">
+          아직 ‘몰라’라고 표시한 단어가 없어요.<br />
+          카드를 보면서 모르는 단어가 나오면<br />
+          <strong>‘아직 몰라’</strong> 버튼을 눌러 표시해두세요.
+          <div class="btn-row" style="margin-top:18px;">
+            <button class="btn primary" id="btn-filter-off" type="button">전체 카드 보기</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 퀴즈 모드 ============ -->
+      <section id="panel-quiz" class="hidden">
+        <div id="quiz-play">
+          <div class="progress-row">
+            <span id="quiz-counter">문제 1 / 25</span>
+            <span id="quiz-score">점수: 0점</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="quiz-progress"></div></div>
+
+          <div class="quiz-word-box">
+            <p class="word-en" id="quiz-word">Chlorine</p>
+            <p class="word-pron" id="quiz-pron" style="margin-bottom:0;">클로린</p>
+          </div>
+          <p style="font-size:20px; font-weight:700; margin:0 0 12px;">뜻이 맞는 것을 고르세요</p>
+          <div class="choices" id="choices"></div>
+
+          <div class="feedback" id="feedback">
+            <h3 id="feedback-title"></h3>
+            <p><span class="lbl">뜻 · </span><span id="feedback-meaning"></span></p>
+            <p><span class="lbl">🌱 어원 · </span><span id="feedback-etym"></span></p>
+            <p><span class="lbl">🎯 시험 포인트 · </span><span id="feedback-tip"></span></p>
+            <div class="btn-row" style="margin-top:16px;">
+              <button class="btn primary" id="btn-quiz-next" type="button">다음 문제 →</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="quiz-result" class="hidden">
+          <div class="result-box">
+            <p style="font-size:21px; margin:0;">퀴즈 끝!</p>
+            <p class="result-score" id="result-score">0 / 25</p>
+            <p class="result-msg" id="result-msg"></p>
+          </div>
+          <div id="wrong-section">
+            <h2 class="section-title">틀린 단어 다시 보기</h2>
+            <ul class="wrong-list" id="wrong-list"></ul>
+          </div>
+          <div class="btn-row">
+            <button class="btn warn hidden" id="btn-retry-wrong" type="button">틀린 것만 다시</button>
+            <button class="btn primary" id="btn-retry-all" type="button">전부 다시 시작</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      var WORDS = [
+        { en: "Chlorine", pron: "클로린", meaning: "염소", short: "염소", etym: "그리스어 chloros = 연두색. 염소 가스가 연두색이라 붙은 이름", tip: "오존을 파괴하는 범인, 시험 단골" },
+        { en: "Fluorine", pron: "플루어린", meaning: "불소", short: "불소", etym: "라틴어 fluere = 흐르다. flow와 같은 뿌리", tip: "염소와 헷갈리는 함정 단어" },
+        { en: "Hydrogen", pron: "하이드러전", meaning: "수소", short: "수소", etym: "hydro(물) + gen(만들다) = 물을 만드는 것", tip: "HCFC·HFC·HFO 이름 맨 앞" },
+        { en: "Carbon", pron: "카본", meaning: "탄소", short: "탄소", etym: "라틴어 carbo = 숯", tip: "냉매 계열 이름 맨 뒤는 전부 Carbon" },
+        { en: "CFC", pron: "씨에프씨", meaning: "Chlorofluorocarbon — 염소·불소·탄소", short: "염소·불소·탄소 냉매 (오존 파괴 가장 심함)", etym: "이름이 곧 성분표: Chloro(염소) + Fluoro(불소) + Carbon(탄소)", tip: "오존 파괴가 가장 심한 계열" },
+        { en: "HCFC", pron: "에이치씨에프씨", meaning: "Hydrochlorofluorocarbon — 수소·염소·불소·탄소", short: "수소·염소·불소·탄소 냉매 (대표 R-22)", etym: "CFC 앞에 Hydro(수소)가 붙은 것", tip: "대표 냉매 R-22, phase out 대상" },
+        { en: "HFC", pron: "에이치에프씨", meaning: "Hydrofluorocarbon — 수소·불소·탄소", short: "수소·불소·탄소 냉매 (염소 없음)", etym: "HCFC에서 Chloro(염소)가 빠진 것", tip: "염소 없어 오존 파괴 없음, 대표 R-134a·R-410A" },
+        { en: "HFO", pron: "에이치에프오", meaning: "Hydrofluoroolefin — 수소·불소·탄소 + 이중결합", short: "수소·불소·탄소 + 이중결합 냉매", etym: "Olefin은 라틴어 oleum(기름)에서 온 말로 이중결합 구조를 뜻함", tip: "대표 R-1234yf·R-1234ze, ODP 0·GWP 아주 낮음" },
+        { en: "ozone", pron: "오존", meaning: "오존", short: "오존", etym: "그리스어 ozein = 냄새 나다. 특유의 냄새 때문에 붙은 이름", tip: "성층권 오존층이 자외선을 막아줌" },
+        { en: "stratosphere", pron: "스트래터스피어", meaning: "성층권 (오존층이 있는 층)", short: "성층권", etym: "stratum(층) + sphere(구) = 층으로 된 구", tip: "오존층이 있는 대기의 층" },
+        { en: "deplete", pron: "디플리트", meaning: "고갈시키다, 파괴하다", short: "고갈시키다, 파괴하다", etym: "de(없애다) + plete(채우다) = 채운 걸 비워내다", tip: "ozone depletion = 오존 파괴, phase out과 구분" },
+        { en: "ODP", pron: "오디피", meaning: "Ozone Depletion Potential — 오존파괴지수", short: "오존파괴지수", etym: "Potential은 라틴어 potent(힘)에서 온 말 = 잠재력, ‘파괴할 수 있는 힘의 크기’", tip: "CFC가 기준 1.0, HFC·HFO는 0" },
+        { en: "GWP", pron: "지더블유피", meaning: "Global Warming Potential — 지구온난화지수", short: "지구온난화지수", etym: "globe(지구본) + warm(따뜻하다) = 지구를 데우는 힘의 크기", tip: "HFO는 아주 낮고 HFC는 높은 편" },
+        { en: "ultraviolet (UV)", pron: "울트라바이올렛", meaning: "자외선", short: "자외선", etym: "ultra(넘어) + violet(보라색) = 보라색 너머의 빛", tip: "오존층이 막아주는 것" },
+        { en: "dissolve", pron: "디졸브", meaning: "녹다, 녹이다", short: "녹다, 녹이다", etym: "dis(흩어지다) + solve(풀다). 문제 푸는 solve와 같은 뿌리", tip: "냉매가 오일에 녹는다는 문장에 나옴" },
+        { en: "release", pron: "릴리스", meaning: "방출하다, 내보내다", short: "방출하다, 내보내다", etym: "re(다시) + lease(느슨하게 놓다) = 풀어놓다", tip: "냉매를 대기로 release하면 문제" },
+        { en: "vent / venting", pron: "벤트 / 벤팅", meaning: "(고의로) 대기로 내보내는 것", short: "고의로 대기로 내보내는 것", etym: "라틴어 ventus = 바람. 환기(ventilation)도 같은 뿌리", tip: "knowingly venting = 알면서 배출 = 금지 행위" },
+        { en: "phase out", pron: "페이즈 아웃", meaning: "단계적으로 생산·중단을 없애다", short: "단계적으로 중단·없애다", etym: "phase = 달의 위상처럼 변하는 단계", tip: "R-22 같은 HCFC가 대상, deplete와 구분" },
+        { en: "prohibit", pron: "프로히빗", meaning: "금지하다", short: "금지하다", etym: "pro(앞에서) + hibit(잡다) = 앞에서 붙잡아 막다", tip: "prohibited = 금지된" },
+        { en: "knowingly", pron: "노잉리", meaning: "알면서, 고의로", short: "알면서, 고의로", etym: "know(알다) + ing + ly", tip: "벌금 문제 단골: knowingly venting" },
+        { en: "Montreal Protocol", pron: "몬트리올 프로토콜", meaning: "몬트리올 의정서 (오존 보호 국제협약)", short: "몬트리올 의정서 (오존 보호 협약)", etym: "Protocol은 원래 책 첫 장에 붙이던 요약지 → 공식 약속 문서 = 의정서", tip: "오존 조약 문제의 정답, Kyoto는 온난화 쪽 함정" },
+        { en: "recover", pron: "리커버", meaning: "회수하다 (냉매를 빼서 용기에 담다)", short: "회수하다 (빼서 용기에 담다)", etym: "라틴어 recuperare = 다시 되찾다", tip: "3R의 첫 번째, 빼서 담기만 하는 단계" },
+        { en: "recycle", pron: "리사이클", meaning: "재생하다 (걸러서 다시 쓰다)", short: "재생하다 (걸러서 다시 쓰다)", etym: "re(다시) + cycle(원·바퀴) = 다시 돌리다", tip: "3R의 두 번째, 청소해서 재사용" },
+        { en: "reclaim", pron: "리클레임", meaning: "재처리하다 (새것 수준으로 정제)", short: "재처리하다 (새것 수준으로 정제)", etym: "re(다시) + claim(요구하다) = 다시 요구해서 되찾다", tip: "3R의 세 번째, 순도 기준 통과 필요" },
+        { en: "refrigerant", pron: "리프리저런트", meaning: "냉매", short: "냉매", etym: "라틴어 friger = 차갑게 하다. 냉장고 fridge와 같은 뿌리", tip: "에어컨·냉장고 안에서 열을 나르는 물질" }
+      ];
+      var PASTELS = ["p1", "p2", "p3", "p4", "p5", "p6"];
+
+      function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+      function $(id) { return document.getElementById(id); }
+
+      /* ============ 모드 전환 ============ */
+      $("tab-cards").addEventListener("click", function () { setMode("cards"); });
+      $("tab-quiz").addEventListener("click", function () { setMode("quiz"); });
+      function setMode(mode) {
+        $("tab-cards").classList.toggle("active", mode === "cards");
+        $("tab-quiz").classList.toggle("active", mode === "quiz");
+        $("panel-cards").classList.toggle("hidden", mode !== "cards");
+        $("panel-quiz").classList.toggle("hidden", mode !== "quiz");
+        window.scrollTo(0, 0);
+      }
+
+      /* ============ 카드 모드 ============ */
+      var deck = WORDS.map(function (_, i) { return i; });
+      var pos = 0;
+      var flipped = false;
+      var unknown = {};       // word index -> true
+      var filterUnknown = false;
+
+      function visibleDeck() {
+        if (!filterUnknown) return deck;
+        return deck.filter(function (i) { return unknown[i]; });
+      }
+      function currentWordIdx() {
+        var d = visibleDeck();
+        if (d.length === 0) return -1;
+        if (pos >= d.length) pos = d.length - 1;
+        if (pos < 0) pos = 0;
+        return d[pos];
+      }
+      function renderCard() {
+        var d = visibleDeck();
+        var empty = d.length === 0;
+        $("card-area").classList.toggle("hidden", empty);
+        $("card-empty").classList.toggle("hidden", !empty);
+        var total = empty ? 0 : d.length;
+        $("card-counter").textContent = empty ? "0 / 0" : (pos + 1) + " / " + total;
+        var uc = Object.keys(unknown).length;
+        $("card-unknown-count").textContent = "아직 몰라: " + uc + "개";
+        $("card-progress").style.width = empty ? "0%" : ((pos + 1) / total * 100) + "%";
+        $("btn-filter").textContent = filterUnknown ? "전체 카드 보기" : "몰라 표시한 것만 보기";
+        if (empty) return;
+        var w = WORDS[currentWordIdx()];
+        flipped = false;
+        $("flip").classList.remove("flipped");
+        $("front-word").textContent = w.en;
+        $("front-pron").textContent = w.pron;
+        $("back-word").textContent = w.en;
+        $("back-pron").textContent = w.pron;
+        $("back-meaning").textContent = w.meaning;
+        $("back-etym").textContent = w.etym;
+        $("back-tip").textContent = w.tip;
+        var back = $("card-back");
+        PASTELS.forEach(function (p) { back.classList.remove(p); });
+        back.classList.add(PASTELS[currentWordIdx() % PASTELS.length]);
+        var isU = !!unknown[currentWordIdx()];
+        $("unknown-badge").classList.toggle("on", isU);
+        $("unknown-badge-back").classList.toggle("on", isU);
+        $("btn-unknown").classList.toggle("on", isU);
+        $("btn-unknown").textContent = isU ? "✓ 몰라 표시됨" : "아직 몰라";
+      }
+      $("flip").addEventListener("click", function () {
+        flipped = !flipped;
+        $("flip").classList.toggle("flipped", flipped);
+      });
+      $("flip").addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("flip").click(); }
+      });
+      $("btn-prev").addEventListener("click", function () {
+        var d = visibleDeck(); if (!d.length) return;
+        pos = (pos - 1 + d.length) % d.length; renderCard();
+      });
+      $("btn-next").addEventListener("click", function () {
+        var d = visibleDeck(); if (!d.length) return;
+        pos = (pos + 1) % d.length; renderCard();
+      });
+      $("btn-shuffle").addEventListener("click", function () {
+        deck = shuffle(deck); pos = 0; renderCard();
+      });
+      $("btn-unknown").addEventListener("click", function () {
+        var i = currentWordIdx(); if (i < 0) return;
+        if (unknown[i]) { delete unknown[i]; } else { unknown[i] = true; }
+        renderCard();
+      });
+      $("btn-filter").addEventListener("click", function () {
+        filterUnknown = !filterUnknown; pos = 0; renderCard();
+      });
+      $("btn-filter-off").addEventListener("click", function () {
+        filterUnknown = false; pos = 0; renderCard();
+      });
+      renderCard();
+
+      /* ============ 퀴즈 모드 ============ */
+      var quizList = [];      // word indices in play
+      var qPos = 0;
+      var qScore = 0;
+      var qWrong = [];        // word indices answered wrong
+      var qAnswered = false;
+
+      function startQuiz(list) {
+        quizList = shuffle(list.slice());
+        qPos = 0; qScore = 0; qWrong = []; qAnswered = false;
+        $("quiz-play").classList.remove("hidden");
+        $("quiz-result").classList.add("hidden");
+        renderQuestion();
+      }
+      function renderQuestion() {
+        qAnswered = false;
+        var total = quizList.length;
+        var wi = quizList[qPos];
+        var w = WORDS[wi];
+        $("quiz-counter").textContent = "문제 " + (qPos + 1) + " / " + total;
+        $("quiz-score").textContent = "점수: " + qScore + "점";
+        $("quiz-progress").style.width = (qPos / total * 100) + "%";
+        $("quiz-word").textContent = w.en;
+        $("quiz-pron").textContent = w.pron;
+        $("feedback").classList.remove("show", "ok", "no");
+
+        // 오답 보기: 뜻이 겹치지 않게 다른 단어에서 3개
+        var others = [];
+        for (var i = 0; i < WORDS.length; i++) {
+          if (i !== wi && WORDS[i].short !== w.short) others.push(i);
+        }
+        var picks = shuffle(others).slice(0, 3);
+        var options = shuffle([wi].concat(picks));
+        var box = $("choices");
+        box.innerHTML = "";
+        options.forEach(function (oi, n) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "choice";
+          b.innerHTML = "";
+          var num = document.createElement("span");
+          num.className = "num"; num.textContent = (n + 1);
+          b.appendChild(num);
+          b.appendChild(document.createTextNode(WORDS[oi].short));
+          b.dataset.wi = oi;
+          b.addEventListener("click", function () { answer(b, oi, wi); });
+          box.appendChild(b);
+        });
+        window.scrollTo(0, 0);
+      }
+      function answer(btn, chosen, correct) {
+        if (qAnswered) return;
+        qAnswered = true;
+        var w = WORDS[correct];
+        var isRight = chosen === correct;
+        var buttons = $("choices").children;
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].disabled = true;
+          buttons[i].classList.add("dim");
+        }
+        // 정답 버튼 표시
+        for (var j = 0; j < buttons.length; j++) {
+          if (parseInt(buttons[j].dataset.wi, 10) === correct) {
+            buttons[j].classList.remove("dim");
+            buttons[j].classList.add("correct");
+          }
+        }
+        btn.classList.remove("dim");
+        if (isRight) {
+          qScore++;
+          btn.classList.add("correct");
+        } else {
+          btn.classList.add("wrong");
+          qWrong.push(correct);
+        }
+        $("quiz-score").textContent = "점수: " + qScore + "점";
+        $("quiz-progress").style.width = ((qPos + 1) / quizList.length * 100) + "%";
+        var fb = $("feedback");
+        fb.classList.add("show", isRight ? "ok" : "no");
+        $("feedback-title").textContent = isRight ? "⭕ 정답이에요!" : "❌ 아쉬워요 — 정답은 ‘" + w.short + "’";
+        $("feedback-meaning").textContent = w.meaning;
+        $("feedback-etym").textContent = w.etym;
+        $("feedback-tip").textContent = w.tip;
+        $("btn-quiz-next").textContent = (qPos + 1 >= quizList.length) ? "결과 보기 →" : "다음 문제 →";
+        fb.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      $("btn-quiz-next").addEventListener("click", function () {
+        if (qPos + 1 >= quizList.length) { showResult(); return; }
+        qPos++; renderQuestion();
+      });
+      function showResult() {
+        $("quiz-play").classList.add("hidden");
+        $("quiz-result").classList.remove("hidden");
+        var total = quizList.length;
+        $("result-score").textContent = qScore + " / " + total;
+        var msg;
+        if (qWrong.length === 0) msg = "전부 맞혔어요! 대단해요 🎉";
+        else if (qScore >= total * 0.8) msg = "아주 잘했어요. 틀린 단어만 한 번 더 보면 완벽해요.";
+        else if (qScore >= total * 0.5) msg = "절반 넘게 맞혔어요. 틀린 단어의 어원을 보면서 다시 해보세요.";
+        else msg = "괜찮아요, 처음엔 다 그래요. 어원을 읽고 틀린 것만 다시 하면 금방 외워져요.";
+        $("result-msg").textContent = msg;
+        var list = $("wrong-list");
+        list.innerHTML = "";
+        $("wrong-section").classList.toggle("hidden", qWrong.length === 0);
+        $("btn-retry-wrong").classList.toggle("hidden", qWrong.length === 0);
+        qWrong.forEach(function (wi) {
+          var w = WORDS[wi];
+          var li = document.createElement("li");
+          var s = document.createElement("span");
+          s.className = "w-en"; s.textContent = w.en + " (" + w.pron + ")";
+          li.appendChild(s);
+          li.appendChild(document.createElement("br"));
+          li.appendChild(document.createTextNode("뜻: " + w.meaning));
+          li.appendChild(document.createElement("br"));
+          li.appendChild(document.createTextNode("🌱 " + w.etym));
+          list.appendChild(li);
+        });
+        window.scrollTo(0, 0);
+      }
+      $("btn-retry-wrong").addEventListener("click", function () { startQuiz(qWrong); });
+      $("btn-retry-all").addEventListener("click", function () {
+        startQuiz(WORDS.map(function (_, i) { return i; }));
+      });
+      startQuiz(WORDS.map(function (_, i) { return i; }));
+    </script>
+  </body>
+</html>
