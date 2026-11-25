@@ -65,31 +65,32 @@
         -webkit-font-smoothing: antialiased;
         min-height: 100vh;
       }
-      .wrap { max-width: 680px; margin: 0 auto; padding: 20px 16px 48px; }
+      .wrap { max-width: 680px; margin: 0 auto; padding: 10px 12px 28px; }
 
-      header { text-align: center; padding: 8px 0 4px; }
+      header { text-align: center; padding: 2px 0 0; }
       h1 {
         font-family: "Jua", "Noto Sans KR", sans-serif;
         font-weight: 400;
-        font-size: clamp(30px, 7vw, 42px);
-        margin: 0 0 6px;
+        font-size: clamp(24px, 6vw, 32px);
+        margin: 0 0 2px;
         letter-spacing: 0.5px;
       }
-      .sub { font-size: 19px; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+      .sub { font-size: 15px; color: var(--ink-soft); margin: 0; line-height: 1.4; }
 
       /* Mode switch */
-      .modes { display: flex; gap: 10px; margin: 22px 0 18px; }
+      .modes { display: flex; gap: 8px; margin: 12px 0 10px; }
       .mode-btn {
         flex: 1;
         font-family: "Jua", "Noto Sans KR", sans-serif;
-        font-size: 22px;
-        padding: 16px 8px;
+        font-size: 17px;
+        padding: 10px 4px;
         border-radius: 999px;
         border: 3px solid var(--line);
         background: var(--card-front);
         color: var(--ink-soft);
         cursor: pointer;
-        min-height: 60px;
+        min-height: 48px;
+        white-space: nowrap;
       }
       .mode-btn.active {
         background: var(--accent);
@@ -100,12 +101,12 @@
 
       .progress-row {
         display: flex; align-items: center; justify-content: space-between;
-        gap: 12px; margin: 4px 2px 10px;
-        font-size: 19px; font-weight: 700;
+        gap: 12px; margin: 2px 2px 6px;
+        font-size: 16px; font-weight: 700;
       }
       .progress-track {
-        height: 14px; border-radius: 999px; background: var(--bg-soft);
-        border: 2px solid var(--line); overflow: hidden; margin-bottom: 16px;
+        height: 10px; border-radius: 999px; background: var(--bg-soft);
+        border: 2px solid var(--line); overflow: hidden; margin-bottom: 10px;
       }
       .progress-fill {
         height: 100%; background: var(--accent); border-radius: 999px;
@@ -116,9 +117,9 @@
       }
 
       /* ---------- Flip card ---------- */
-      .flip-scene { perspective: 1200px; margin: 6px 0 18px; }
+      .flip-scene { perspective: 1200px; margin: 2px 0 12px; }
       .flip-inner {
-        position: relative; width: 100%; min-height: 380px;
+        position: relative; width: 100%; min-height: 296px;
         transform-style: preserve-3d; transition: transform 0.55s ease;
         cursor: pointer;
       }
@@ -126,7 +127,7 @@
       .face {
         position: absolute; inset: 0;
         backface-visibility: hidden; -webkit-backface-visibility: hidden;
-        border-radius: 28px; padding: 28px 24px;
+        border-radius: 22px; padding: 16px 16px;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         text-align: center; box-shadow: var(--shadow);
         border: 3px solid rgba(0,0,0,0.05);
@@ -140,40 +141,40 @@
 
       .word-en {
         font-family: "Jua", "Noto Sans KR", sans-serif;
-        font-size: clamp(40px, 10vw, 58px);
-        line-height: 1.15; margin: 0 0 10px; word-break: keep-all;
+        font-size: clamp(30px, 8vw, 40px);
+        line-height: 1.15; margin: 0 0 6px; word-break: keep-all;
       }
-      .word-pron { font-size: 26px; font-weight: 700; color: var(--ink-soft); margin: 0 0 18px; }
+      .word-pron { font-size: 20px; font-weight: 700; color: var(--ink-soft); margin: 0 0 12px; }
       .tap-hint {
-        font-size: 19px; color: var(--ink-soft);
-        background: var(--chip); border-radius: 999px; padding: 8px 18px;
+        font-size: 16px; color: var(--ink-soft);
+        background: var(--chip); border-radius: 999px; padding: 6px 14px;
       }
       .unknown-badge {
-        position: absolute; top: 16px; right: 16px;
-        font-size: 17px; font-weight: 900; color: var(--bad);
-        background: var(--bad-bg); border-radius: 999px; padding: 6px 14px;
+        position: absolute; top: 12px; right: 12px;
+        font-size: 15px; font-weight: 900; color: var(--bad);
+        background: var(--bad-bg); border-radius: 999px; padding: 5px 12px;
         display: none;
       }
       .unknown-badge.on { display: block; }
 
-      .back-word { font-family: "Jua", "Noto Sans KR", sans-serif; font-size: 30px; margin: 0 0 2px; text-align: center; }
-      .back-pron { font-size: 20px; font-weight: 700; color: var(--ink-soft); margin: 0 0 16px; text-align: center; }
+      .back-word { font-family: "Jua", "Noto Sans KR", sans-serif; font-size: 24px; margin: 0 0 2px; text-align: center; }
+      .back-pron { font-size: 17px; font-weight: 700; color: var(--ink-soft); margin: 0 0 10px; text-align: center; }
       .info-box {
-        background: rgba(255,255,255,0.55); border-radius: 18px;
-        padding: 14px 18px; margin-bottom: 12px;
+        background: rgba(255,255,255,0.55); border-radius: 14px;
+        padding: 8px 12px; margin-bottom: 8px;
       }
       @media (prefers-color-scheme: dark) { .info-box { background: rgba(0,0,0,0.25); } }
-      .info-label { font-size: 17px; font-weight: 900; color: var(--accent); margin: 0 0 4px; }
-      .info-text { font-size: 22px; line-height: 1.55; margin: 0; font-weight: 500; }
-      .info-text.big { font-size: 27px; font-weight: 900; }
+      .info-label { font-size: 14px; font-weight: 900; color: var(--accent); margin: 0 0 2px; }
+      .info-text { font-size: 17px; line-height: 1.45; margin: 0; font-weight: 500; }
+      .info-text.big { font-size: 21px; font-weight: 900; }
 
       /* Buttons */
-      .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+      .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
       .btn {
         font-family: "Noto Sans KR", sans-serif;
-        font-size: 21px; font-weight: 700;
-        padding: 14px 20px; min-height: 58px;
-        border-radius: 18px; border: 3px solid var(--line);
+        font-size: 17px; font-weight: 700;
+        padding: 10px 14px; min-height: 48px;
+        border-radius: 14px; border: 3px solid var(--line);
         background: var(--card-front); color: var(--ink);
         cursor: pointer; flex: 1; white-space: nowrap;
       }
@@ -181,34 +182,34 @@
       .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
       .btn.warn { border-color: var(--bad); color: var(--bad); }
       .btn.warn.on { background: var(--bad); color: #fff; }
-      .btn.small { flex: 0 1 auto; font-size: 19px; padding: 12px 16px; min-height: 52px; }
+      .btn.small { flex: 0 1 auto; font-size: 16px; padding: 8px 12px; min-height: 44px; }
       .btn:disabled { opacity: 0.45; cursor: default; }
 
       .empty-note {
-        text-align: center; font-size: 21px; line-height: 1.6;
+        text-align: center; font-size: 17px; line-height: 1.55;
         background: var(--card-front); border: 3px dashed var(--line);
-        border-radius: 24px; padding: 36px 24px; margin: 6px 0 18px;
+        border-radius: 20px; padding: 24px 18px; margin: 4px 0 12px;
       }
 
       /* ---------- Quiz ---------- */
       .quiz-word-box {
-        background: var(--card-front); border-radius: 28px; box-shadow: var(--shadow);
-        padding: 30px 24px 26px; text-align: center; margin-bottom: 18px;
+        background: var(--card-front); border-radius: 22px; box-shadow: var(--shadow);
+        padding: 14px 16px 12px; text-align: center; margin-bottom: 12px;
         border: 3px solid rgba(0,0,0,0.05);
       }
-      .choices { display: flex; flex-direction: column; gap: 12px; }
+      .choices { display: flex; flex-direction: column; gap: 8px; }
       .choice {
         font-family: "Noto Sans KR", sans-serif;
-        font-size: 22px; font-weight: 700; text-align: left;
-        padding: 18px 20px; min-height: 64px;
-        border-radius: 18px; border: 3px solid var(--line);
+        font-size: 17px; font-weight: 700; text-align: left;
+        padding: 10px 14px; min-height: 50px;
+        border-radius: 14px; border: 3px solid var(--line);
         background: var(--card-front); color: var(--ink); cursor: pointer;
-        line-height: 1.4;
+        line-height: 1.35;
       }
       .choice .num {
-        display: inline-block; min-width: 34px; height: 34px; line-height: 34px;
+        display: inline-block; min-width: 28px; height: 28px; line-height: 28px;
         text-align: center; border-radius: 50%; background: var(--chip);
-        margin-right: 10px; font-size: 19px; vertical-align: middle;
+        margin-right: 8px; font-size: 16px; vertical-align: middle;
       }
       .choice.correct { background: var(--good-bg); border-color: var(--good); }
       .choice.wrong { background: var(--bad-bg); border-color: var(--bad); }
@@ -216,31 +217,55 @@
       .choice.dim:disabled { opacity: 0.55; }
 
       .feedback {
-        display: none; border-radius: 24px; padding: 20px 22px; margin-top: 18px;
+        display: none; border-radius: 18px; padding: 12px 16px; margin-top: 12px;
       }
       .feedback.show { display: block; }
       .feedback.ok { background: var(--good-bg); }
       .feedback.no { background: var(--bad-bg); }
-      .feedback h3 { font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400; font-size: 27px; margin: 0 0 10px; }
-      .feedback p { font-size: 21px; line-height: 1.6; margin: 0 0 8px; }
+      .feedback h3 { font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400; font-size: 22px; margin: 0 0 6px; }
+      .feedback p { font-size: 16px; line-height: 1.5; margin: 0 0 5px; }
       .feedback p:last-child { margin-bottom: 0; }
       .feedback .lbl { font-weight: 900; }
 
       .result-box {
-        background: var(--card-front); border-radius: 28px; box-shadow: var(--shadow);
-        padding: 28px 24px; text-align: center; margin-bottom: 18px;
+        background: var(--card-front); border-radius: 22px; box-shadow: var(--shadow);
+        padding: 18px 18px; text-align: center; margin-bottom: 14px;
       }
-      .result-score { font-family: "Jua", "Noto Sans KR", sans-serif; font-size: 52px; margin: 6px 0; }
-      .result-msg { font-size: 22px; line-height: 1.55; margin: 0; }
-      .wrong-list { text-align: left; margin: 0 0 18px; padding: 0; list-style: none; }
+      .result-score { font-family: "Jua", "Noto Sans KR", sans-serif; font-size: 42px; margin: 4px 0; }
+      .result-msg { font-size: 18px; line-height: 1.5; margin: 0; }
+      .wrong-list { text-align: left; margin: 0 0 14px; padding: 0; list-style: none; }
       .wrong-list li {
         background: var(--card-front); border: 3px solid var(--line);
-        border-radius: 18px; padding: 14px 18px; margin-bottom: 10px;
-        font-size: 20px; line-height: 1.5;
+        border-radius: 14px; padding: 10px 14px; margin-bottom: 8px;
+        font-size: 17px; line-height: 1.45;
       }
-      .wrong-list .w-en { font-weight: 900; font-size: 22px; }
-      .section-title { font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400; font-size: 26px; margin: 22px 0 12px; }
+      .wrong-list .w-en { font-weight: 900; font-size: 18px; }
+      .section-title { font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400; font-size: 22px; margin: 16px 0 10px; }
       .hidden { display: none !important; }
+
+      /* ---------- Summary ---------- */
+      .sum-stage { margin-bottom: 16px; }
+      .sum-head {
+        display: flex; align-items: center; gap: 8px;
+        font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400;
+        font-size: 19px; margin: 0 0 8px;
+      }
+      .sum-num {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 26px; height: 26px; border-radius: 50%;
+        background: var(--accent); color: var(--accent-ink); font-size: 15px;
+      }
+      .sum-list {
+        list-style: none; margin: 0; padding: 0;
+        background: var(--card-front); border: 3px solid var(--line);
+        border-radius: 16px; overflow: hidden;
+      }
+      .sum-item { padding: 8px 12px; border-bottom: 2px solid var(--line); }
+      .sum-item:last-child { border-bottom: none; }
+      .sum-line1 { font-size: 16px; line-height: 1.4; margin: 0; }
+      .sum-en { font-weight: 900; }
+      .sum-pron { color: var(--ink-soft); font-weight: 500; font-size: 15px; }
+      .sum-line2 { font-size: 14.5px; line-height: 1.4; color: var(--ink-soft); margin: 1px 0 0; }
     </style>
   </head>
   <body>
@@ -253,6 +278,7 @@
       <div class="modes" role="tablist" aria-label="게임 모드">
         <button class="mode-btn active" id="tab-cards" type="button">🃏 카드 뒤집기</button>
         <button class="mode-btn" id="tab-quiz" type="button">✏️ 4지선다 퀴즈</button>
+        <button class="mode-btn" id="tab-summary" type="button">📋 요약</button>
       </div>
 
       <!-- ============ 카드 모드 ============ -->
@@ -292,7 +318,7 @@
             </div>
           </div>
 
-          <div class="btn-row" style="margin-bottom:10px;">
+          <div class="btn-row" style="margin-bottom:8px;">
             <button class="btn" id="btn-prev" type="button">← 이전</button>
             <button class="btn warn" id="btn-unknown" type="button">아직 몰라</button>
             <button class="btn primary" id="btn-next" type="button">다음 →</button>
@@ -326,7 +352,7 @@
             <p class="word-en" id="quiz-word">Chlorine</p>
             <p class="word-pron" id="quiz-pron" style="margin-bottom:0;">클로린</p>
           </div>
-          <p style="font-size:20px; font-weight:700; margin:0 0 12px;">뜻이 맞는 것을 고르세요</p>
+          <p style="font-size:17px; font-weight:700; margin:0 0 8px;">뜻이 맞는 것을 고르세요</p>
           <div class="choices" id="choices"></div>
 
           <div class="feedback" id="feedback">
@@ -334,7 +360,7 @@
             <p><span class="lbl">뜻 · </span><span id="feedback-meaning"></span></p>
             <p><span class="lbl">🌱 어원 · </span><span id="feedback-etym"></span></p>
             <p><span class="lbl">🎯 시험 포인트 · </span><span id="feedback-tip"></span></p>
-            <div class="btn-row" style="margin-top:16px;">
+            <div class="btn-row" style="margin-top:10px;">
               <button class="btn primary" id="btn-quiz-next" type="button">다음 문제 →</button>
             </div>
           </div>
@@ -342,7 +368,7 @@
 
         <div id="quiz-result" class="hidden">
           <div class="result-box">
-            <p style="font-size:21px; margin:0;">퀴즈 끝!</p>
+            <p style="font-size:18px; margin:0;">퀴즈 끝!</p>
             <p class="result-score" id="result-score">0 / 25</p>
             <p class="result-msg" id="result-msg"></p>
           </div>
@@ -355,6 +381,12 @@
             <button class="btn primary" id="btn-retry-all" type="button">전부 다시 시작</button>
           </div>
         </div>
+      </section>
+
+      <!-- ============ 요약 모드 ============ -->
+      <section id="panel-summary" class="hidden">
+        <p style="font-size:16px; font-weight:700; margin:2px 2px 12px;">공부한 순서대로 5단계로 묶었어요. 시험 전에 한 번씩 훑어보세요.</p>
+        <div id="summary-body"></div>
       </section>
     </div>
 
@@ -401,13 +433,75 @@
       /* ============ 모드 전환 ============ */
       $("tab-cards").addEventListener("click", function () { setMode("cards"); });
       $("tab-quiz").addEventListener("click", function () { setMode("quiz"); });
+      $("tab-summary").addEventListener("click", function () { setMode("summary"); });
       function setMode(mode) {
         $("tab-cards").classList.toggle("active", mode === "cards");
         $("tab-quiz").classList.toggle("active", mode === "quiz");
+        $("tab-summary").classList.toggle("active", mode === "summary");
         $("panel-cards").classList.toggle("hidden", mode !== "cards");
         $("panel-quiz").classList.toggle("hidden", mode !== "quiz");
+        $("panel-summary").classList.toggle("hidden", mode !== "summary");
         window.scrollTo(0, 0);
       }
+
+      /* ============ 요약 모드 ============ */
+      var STAGES = [
+        { title: "원소", words: ["Chlorine", "Fluorine", "Hydrogen", "Carbon"] },
+        { title: "냉매 계열", words: ["CFC", "HCFC", "HFC", "HFO"] },
+        { title: "오존과 환경", words: ["ozone", "stratosphere", "deplete", "ODP", "GWP", "ultraviolet (UV)", "Montreal Protocol"] },
+        { title: "핵심 동사", words: ["dissolve", "release", "vent / venting", "phase out", "prohibit", "knowingly"] },
+        { title: "3R 원칙", words: ["recover", "recycle", "reclaim", "refrigerant"] }
+      ];
+      function wordByEn(en) {
+        for (var i = 0; i < WORDS.length; i++) {
+          if (WORDS[i].en === en) return WORDS[i];
+        }
+        return null;
+      }
+      function renderSummary() {
+        var body = $("summary-body");
+        body.innerHTML = "";
+        STAGES.forEach(function (stage, si) {
+          var wrap = document.createElement("div");
+          wrap.className = "sum-stage";
+          var head = document.createElement("p");
+          head.className = "sum-head";
+          var num = document.createElement("span");
+          num.className = "sum-num";
+          num.textContent = (si + 1);
+          head.appendChild(num);
+          head.appendChild(document.createTextNode((si + 1) + "단계 · " + stage.title));
+          wrap.appendChild(head);
+          var ul = document.createElement("ul");
+          ul.className = "sum-list";
+          stage.words.forEach(function (en) {
+            var w = wordByEn(en);
+            if (!w) return;
+            var li = document.createElement("li");
+            li.className = "sum-item";
+            var l1 = document.createElement("p");
+            l1.className = "sum-line1";
+            var enEl = document.createElement("span");
+            enEl.className = "sum-en";
+            enEl.textContent = w.en;
+            var pronEl = document.createElement("span");
+            pronEl.className = "sum-pron";
+            pronEl.textContent = " (" + w.pron + ")";
+            l1.appendChild(enEl);
+            l1.appendChild(pronEl);
+            l1.appendChild(document.createTextNode(" — " + w.short));
+            var l2 = document.createElement("p");
+            l2.className = "sum-line2";
+            l2.textContent = "🌱 " + w.etym;
+            li.appendChild(l1);
+            li.appendChild(l2);
+            ul.appendChild(li);
+          });
+          wrap.appendChild(ul);
+          body.appendChild(wrap);
+        });
+      }
+      renderSummary();
 
       /* ============ 카드 모드 ============ */
       var deck = WORDS.map(function (_, i) { return i; });
