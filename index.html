@@ -272,13 +272,18 @@
       .sum-en { font-weight: 900; }
       .sum-pron { color: var(--ink-soft); font-weight: 500; font-size: 15px; }
       .sum-line2 { font-size: 14.5px; line-height: 1.4; color: var(--ink-soft); margin: 1px 0 0; }
+      .sum-num-title {
+        font-family: "Jua", "Noto Sans KR", sans-serif; font-weight: 400;
+        font-size: 19px; margin: 14px 0 8px;
+      }
+      .sum-numkey { font-weight: 900; color: var(--accent); white-space: nowrap; }
     </style>
   </head>
   <body>
     <div class="wrap">
       <header>
         <h1>EPA 608 단어 게임</h1>
-        <p class="sub">지금까지 공부한 단어 25개 · 어원으로 외우면 오래 기억돼요</p>
+        <p class="sub" id="sub-line">지금까지 공부한 단어 42개 · 어원으로 외우면 오래 기억돼요</p>
       </header>
 
       <div class="modes" role="tablist" aria-label="게임 모드">
@@ -290,7 +295,7 @@
       <!-- ============ 카드 모드 ============ -->
       <section id="panel-cards">
         <div class="progress-row">
-          <span id="card-counter">1 / 25</span>
+          <span id="card-counter">1 / 42</span>
           <span id="card-unknown-count">아직 몰라: 0개</span>
         </div>
         <div class="progress-track"><div class="progress-fill" id="card-progress"></div></div>
@@ -349,7 +354,7 @@
       <section id="panel-quiz" class="hidden">
         <div id="quiz-play">
           <div class="progress-row">
-            <span id="quiz-counter">문제 1 / 25</span>
+            <span id="quiz-counter">문제 1 / 42</span>
             <span id="quiz-score">점수: 0점</span>
           </div>
           <div class="progress-track"><div class="progress-fill" id="quiz-progress"></div></div>
@@ -375,7 +380,7 @@
         <div id="quiz-result" class="hidden">
           <div class="result-box">
             <p style="font-size:18px; margin:0;">퀴즈 끝!</p>
-            <p class="result-score" id="result-score">0 / 25</p>
+            <p class="result-score" id="result-score">0 / 42</p>
             <p class="result-msg" id="result-msg"></p>
           </div>
           <div id="wrong-section">
@@ -422,7 +427,24 @@
         { en: "recover", pron: "리커버", meaning: "회수하다 (냉매를 빼서 용기에 담다)", short: "회수하다 (빼서 용기에 담다)", etym: "라틴어 recuperare = 다시 되찾다", tip: "3R의 첫 번째, 빼서 담기만 하는 단계" },
         { en: "recycle", pron: "리사이클", meaning: "재생하다 (걸러서 다시 쓰다)", short: "재생하다 (걸러서 다시 쓰다)", etym: "re(다시) + cycle(원·바퀴) = 다시 돌리다", tip: "3R의 두 번째, 청소해서 재사용" },
         { en: "reclaim", pron: "리클레임", meaning: "재처리하다 (새것 수준으로 정제)", short: "재처리하다 (새것 수준으로 정제)", etym: "re(다시) + claim(요구하다) = 다시 요구해서 되찾다", tip: "3R의 세 번째, 순도 기준 통과 필요" },
-        { en: "refrigerant", pron: "리프리저런트", meaning: "냉매", short: "냉매", etym: "라틴어 friger = 차갑게 하다. 냉장고 fridge와 같은 뿌리", tip: "에어컨·냉장고 안에서 열을 나르는 물질" }
+        { en: "refrigerant", pron: "리프리저런트", meaning: "냉매", short: "냉매", etym: "라틴어 friger = 차갑게 하다. 냉장고 fridge와 같은 뿌리", tip: "에어컨·냉장고 안에서 열을 나르는 물질" },
+        { en: "recovery", pron: "리커버리", meaning: "회수 — 냉매를 빼내 용기에 저장하는 것", short: "회수 (빼내 용기에 저장)", etym: "re-(다시) + cover(덮다) → 다시 거둬들이다", tip: "3R의 첫 단계. 빼내기만 하고 저장 안 하면 회수가 아님" },
+        { en: "evacuate", pron: "이배큐에이트", meaning: "시스템을 비우다, 진공으로 빼다", short: "시스템을 비우다 (진공으로 빼다)", etym: "e-(밖으로) + vacu(비어 있는) → 속을 비우다. vacuum과 같은 뿌리", tip: "회수한 뒤 시스템을 열기 전에 비우는 과정" },
+        { en: "vacuum", pron: "배큠", meaning: "진공", short: "진공", etym: "라틴어 vacuus = 비어 있는", tip: "진공 깊이는 micron으로 잰다" },
+        { en: "micron", pron: "마이크론", meaning: "미크론 — 진공 측정 단위", short: "미크론 (진공 측정 단위)", etym: "그리스어 mikros = 작은", tip: "수분 제거(탈수)는 500 microns까지 당긴다" },
+        { en: "dehydration", pron: "디하이드레이션", meaning: "탈수, 수분 제거", short: "탈수, 수분 제거", etym: "de-(제거) + hydr(물) + -ation", tip: "진공 펌프로 시스템 안 물기를 빼는 것" },
+        { en: "non-condensables", pron: "넌컨덴서블즈", meaning: "비응축 가스 (공기·질소 등)", short: "비응축 가스 (공기·질소 등)", etym: "non-(아닌) + condense(응축하다: con- 함께 + dense 빽빽한)", tip: "시스템에 공기가 섞이면 압력이 올라가고 효율이 떨어진다" },
+        { en: "leak", pron: "리크", meaning: "누설, 새다", short: "누설, 새다", etym: "옛 노르드어 leka = 물이 방울져 떨어지다", tip: "연간 누설률 상한(50파운드 이상): 냉방 10% · 상업 냉동 20% · 산업 공정 30%" },
+        { en: "detector", pron: "디텍터", meaning: "탐지기", short: "탐지기", etym: "de-(벗기다) + tect(덮다) → 덮인 것을 벗겨 찾아내다", tip: "전자식 누설 탐지기가 가장 민감하다" },
+        { en: "cylinder", pron: "실린더", meaning: "회수 용기", short: "회수 용기", etym: "그리스어 kylindros = 굴러가는 것 → 원통 모양", tip: "80%까지만 채운다. 색은 회색 몸통 + 노란 어깨" },
+        { en: "disposable", pron: "디스포저블", meaning: "일회용의", short: "일회용의", etym: "dis-(따로) + pose(놓다) → 치워버리다", tip: "일회용 실린더는 회수용 금지. 회수는 재충전 가능한 DOT 승인 용기만" },
+        { en: "hydrostatic test", pron: "하이드로스태틱 테스트", meaning: "수압 검사", short: "수압 검사", etym: "hydro(물) + static(서 있는) → 물 압력을 걸어 보는 검사", tip: "회수 실린더는 5년마다 수압 검사" },
+        { en: "relief valve", pron: "릴리프 밸브", meaning: "압력 방출 밸브", short: "압력 방출 밸브", etym: "relief는 re- + lev(가벼운) → 무거운 것을 덜어 가볍게 하다", tip: "실린더 압력이 너무 오르면 자동으로 빼주는 안전장치" },
+        { en: "PPE", pron: "피피이", meaning: "개인 보호구 (Personal Protective Equipment)", short: "개인 보호구", etym: "protective는 pro-(앞에서) + tect(덮다) → 앞에서 덮어 지켜주다", tip: "보안경 + 안전장갑 필수. 액체 냉매가 피부에 닿으면 동상" },
+        { en: "blend", pron: "블렌드", meaning: "혼합 냉매", short: "혼합 냉매", etym: "옛 노르드어 blanda = 섞다", tip: "혼합 냉매는 액체 상태로 충전한다 (기체로 넣으면 조성 변함)" },
+        { en: "glide", pron: "글라이드", meaning: "온도 글라이드", short: "온도 글라이드", etym: "옛 영어 glidan = 미끄러지다", tip: "혼합 냉매가 증발·응축할 때 온도가 미끄러지듯 변하는 폭. PT 차트에서 dew/bubble을 나누는 이유" },
+        { en: "zeotropic", pron: "지오트로픽", meaning: "비공비 혼합물", short: "비공비 혼합물", etym: "zeo(끓다) + tropic(변하다) → 끓으면서 변하다", tip: "대표 예 R-407C, 글라이드가 크다" },
+        { en: "azeotropic", pron: "에이지오트로픽", meaning: "공비 혼합물", short: "공비 혼합물", etym: "a-(없다) + zeo(끓다) + tropic(변하다) → 끓어도 변하지 않다", tip: "단일 냉매처럼 행동. 500번대, 대표 예 R-507" }
       ];
       var PASTELS = ["p1", "p2", "p3", "p4", "p5", "p6"];
 
@@ -452,10 +474,27 @@
 
       /* ============ 요약 모드 ============ */
       var STAGES = [
-        { title: "코어 · Core", badge: "C", words: ["Chlorine", "Fluorine", "Hydrogen", "Carbon", "CFC", "HCFC", "HFC", "HFO", "ozone", "stratosphere", "deplete", "ODP", "GWP", "ultraviolet (UV)", "dissolve", "release", "vent / venting", "phase out", "prohibit", "knowingly", "Montreal Protocol", "recover", "recycle", "reclaim", "refrigerant"] },
+        { title: "코어 · Core", badge: "C", words: ["Chlorine", "Fluorine", "Hydrogen", "Carbon", "CFC", "HCFC", "HFC", "HFO", "ozone", "stratosphere", "deplete", "ODP", "GWP", "ultraviolet (UV)", "dissolve", "release", "vent / venting", "phase out", "prohibit", "knowingly", "Montreal Protocol", "recover", "recycle", "reclaim", "refrigerant", "recovery", "evacuate", "vacuum", "micron", "dehydration", "non-condensables", "leak", "detector", "cylinder", "disposable", "hydrostatic test", "relief valve", "PPE", "blend", "glide", "zeotropic", "azeotropic"] },
         { title: "타입 I · Type I", badge: "I", words: [] },
         { title: "타입 II · Type II", badge: "II", words: [] },
         { title: "타입 III · Type III", badge: "III", words: [] }
+      ];
+      var NUMBERS = [
+        ["1987", "Montreal Protocol 서명"],
+        ["1990", "Clean Air Act 개정"],
+        ["1992-07-01", "회수 장비 의무 시작"],
+        ["1993-11-15", "CFC·HCFC 방출 금지"],
+        ["1994-11-14", "기술자 자격증 의무화"],
+        ["1995-11-15", "HFC 방출 금지 추가"],
+        ["90% · 80%", "소형기기 회수율 (압축기 작동 90, 미작동 80)"],
+        ["4 in Hg", "소형기기 회수 진공 기준"],
+        ["80%", "실린더 최대 충전"],
+        ["10 · 20 · 30%", "누설률 상한 (냉방 · 상업 냉동 · 산업 공정)"],
+        ["30일", "누설 수리 기한"],
+        ["3년", "기록 보관"],
+        ["5년", "실린더 수압 검사 주기"],
+        ["500 microns", "탈수 진공 목표"],
+        ["$40,000 이상", "벌금 (하루, 건마다)"]
       ];
       function wordByEn(en) {
         for (var i = 0; i < WORDS.length; i++) {
@@ -517,10 +556,33 @@
             ul.appendChild(li);
           });
           wrap.appendChild(ul);
+          if (si === 0) {
+            var numTitle = document.createElement("p");
+            numTitle.className = "sum-num-title";
+            numTitle.textContent = "🔢 핵심 숫자";
+            wrap.appendChild(numTitle);
+            var nul = document.createElement("ul");
+            nul.className = "sum-list";
+            NUMBERS.forEach(function (pair) {
+              var nli = document.createElement("li");
+              nli.className = "sum-item";
+              var nl = document.createElement("p");
+              nl.className = "sum-line1";
+              var key = document.createElement("span");
+              key.className = "sum-numkey";
+              key.textContent = pair[0];
+              nl.appendChild(key);
+              nl.appendChild(document.createTextNode(" — " + pair[1]));
+              nli.appendChild(nl);
+              nul.appendChild(nli);
+            });
+            wrap.appendChild(nul);
+          }
           body.appendChild(wrap);
         });
       }
       renderSummary();
+      $("sub-line").textContent = "지금까지 공부한 단어 " + WORDS.length + "개 · 어원으로 외우면 오래 기억돼요";
 
       /* ============ 카드 모드 ============ */
       var deck = WORDS.map(function (_, i) { return i; });
